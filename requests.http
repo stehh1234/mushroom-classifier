@@ -1,0 +1,89 @@
+# Sample requests for the API (start it first: fastapi dev app/main.py).
+# VS Code: install the "REST Client" extension, then click "Send Request" above a request.
+# JetBrains IDEs run this file as is.
+
+@base = http://127.0.0.1:8000
+
+### Is the API up? Is the model loaded?
+GET {{base}}/health
+
+### How was the model trained, and how good is it?
+GET {{base}}/models
+
+### Mushroom: pungent smell, black spore print (poisonous)
+POST {{base}}/mushroom/predict
+Content-Type: application/json
+
+{
+  "cap_shape": "convex", "cap_surface": "smooth", "cap_color": "brown", "bruises": "yes",
+  "odor": "pungent", "gill_attachment": "free", "gill_spacing": "close", "gill_size": "narrow",
+  "gill_color": "black", "stalk_shape": "enlarging", "stalk_root": "equal",
+  "stalk_surface_above_ring": "smooth", "stalk_surface_below_ring": "smooth",
+  "stalk_color_above_ring": "white", "stalk_color_below_ring": "white", "veil_color": "white",
+  "ring_number": "one", "ring_type": "pendant", "spore_print_color": "black",
+  "population": "scattered", "habitat": "urban"
+}
+
+### Mushroom: smells of almond, brown spore print (edible)
+POST {{base}}/mushroom/predict
+Content-Type: application/json
+
+{
+  "cap_shape": "convex", "cap_surface": "smooth", "cap_color": "yellow", "bruises": "yes",
+  "odor": "almond", "gill_attachment": "free", "gill_spacing": "close", "gill_size": "broad",
+  "gill_color": "black", "stalk_shape": "enlarging", "stalk_root": "club",
+  "stalk_surface_above_ring": "smooth", "stalk_surface_below_ring": "smooth",
+  "stalk_color_above_ring": "white", "stalk_color_below_ring": "white", "veil_color": "white",
+  "ring_number": "one", "ring_type": "pendant", "spore_print_color": "brown",
+  "population": "numerous", "habitat": "grasses"
+}
+
+### What if: the edible one, but it smells foul?
+POST {{base}}/mushroom/predict
+Content-Type: application/json
+
+{
+  "cap_shape": "convex", "cap_surface": "smooth", "cap_color": "yellow", "bruises": "yes",
+  "odor": "foul", "gill_attachment": "free", "gill_spacing": "close", "gill_size": "broad",
+  "gill_color": "black", "stalk_shape": "enlarging", "stalk_root": "club",
+  "stalk_surface_above_ring": "smooth", "stalk_surface_below_ring": "smooth",
+  "stalk_color_above_ring": "white", "stalk_color_below_ring": "white", "veil_color": "white",
+  "ring_number": "one", "ring_type": "pendant", "spore_print_color": "brown",
+  "population": "numerous", "habitat": "grasses"
+}
+
+### Mushroom: several in one call
+POST {{base}}/mushroom/predict/batch
+Content-Type: application/json
+
+[
+  {"cap_shape": "convex", "cap_surface": "smooth", "cap_color": "brown", "bruises": "yes",
+   "odor": "pungent", "gill_attachment": "free", "gill_spacing": "close", "gill_size": "narrow",
+   "gill_color": "black", "stalk_shape": "enlarging", "stalk_root": "equal",
+   "stalk_surface_above_ring": "smooth", "stalk_surface_below_ring": "smooth",
+   "stalk_color_above_ring": "white", "stalk_color_below_ring": "white", "veil_color": "white",
+   "ring_number": "one", "ring_type": "pendant", "spore_print_color": "black",
+   "population": "scattered", "habitat": "urban"},
+  {"cap_shape": "bell", "cap_surface": "smooth", "cap_color": "white", "bruises": "yes",
+   "odor": "anise", "gill_attachment": "free", "gill_spacing": "close", "gill_size": "broad",
+   "gill_color": "brown", "stalk_shape": "enlarging", "stalk_root": "club",
+   "stalk_surface_above_ring": "smooth", "stalk_surface_below_ring": "smooth",
+   "stalk_color_above_ring": "white", "stalk_color_below_ring": "white", "veil_color": "white",
+   "ring_number": "one", "ring_type": "pendant", "spore_print_color": "brown",
+   "population": "numerous", "habitat": "meadows"}
+]
+
+### Invalid input -> 422 (an unknown smell, and the dropped veil_type field)
+POST {{base}}/mushroom/predict
+Content-Type: application/json
+
+{
+  "cap_shape": "convex", "cap_surface": "smooth", "cap_color": "brown", "bruises": "yes",
+  "odor": "lemon", "gill_attachment": "free", "gill_spacing": "close", "gill_size": "narrow",
+  "gill_color": "black", "stalk_shape": "enlarging", "stalk_root": "equal",
+  "stalk_surface_above_ring": "smooth", "stalk_surface_below_ring": "smooth",
+  "stalk_color_above_ring": "white", "stalk_color_below_ring": "white", "veil_color": "white",
+  "ring_number": "one", "ring_type": "pendant", "spore_print_color": "black",
+  "population": "scattered", "habitat": "urban", "veil_type": "partial"
+}
+
